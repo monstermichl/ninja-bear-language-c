@@ -1,7 +1,8 @@
+/* Generated with ninja-bear v1.0.0 (https://pypi.org/project/ninja-bear/). */
+
 #ifndef TEST_CONFIG_H
 #define TEST_CONFIG_H
 
-/* Generated with ninja-bear v1.0.0 (https://pypi.org/project/ninja-bear/). */
 const struct {
     unsigned char MyBoolean;
     int MyInteger;
