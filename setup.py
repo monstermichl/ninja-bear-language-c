@@ -19,11 +19,9 @@ setup(
         entry_points = {
             'ninja-bear-language-c': ['config=ninja_bear_language.config:Config']
         },
-        install_requires=[
-            'ninja-bear>=1.0.0',
-        ],
         extras_require={
             'dev': [
+                'ninja-bear>=1.0.0',
                 'wheel>=0.41.1',
                 'twine>=4.0.2',
                 'ruff>=0.0.47',
