@@ -1,3 +1,4 @@
+from typing import Callable, List
 from ninja_bear import GeneratorBase, Property, PropertyType, NameConverter, NamingConventionType
 
 
@@ -9,16 +10,29 @@ class Generator(GeneratorBase):
     def _default_type_naming_convention(self) -> NamingConventionType:
         return NamingConventionType.PASCAL_CASE
     
-    def _before_type(self) -> str:
-        return f'#ifndef {self._guard_name()}\n#define {self._guard_name()}\n\n'
-
-    def _property_before_type(self, _: Property) -> str:
-        return ''
+    def _line_comment(self, string: str) -> str:
+        return f'/* {string} */'
     
-    def _start_type(self, _: str) -> str:
-        return 'const struct {'
+    def _dump(self, type_name: str, properties: List[Property]) -> str:
+        code = f'#ifndef {self._guard_name()}\n#define {self._guard_name()}\n\n'
+        code += 'const struct {\n'
 
-    def _property_in_type(self, property: Property) -> str:
+        # Specify fields.
+        for property in properties:
+            code += self._property_line(self._field, property)
+        code += f'}} {type_name} = {{\n'
+
+        # Assign values.
+        for property in properties:
+            code += self._property_line(self._value, property)
+        code += f'}};\n\n#endif {self._line_comment(self._guard_name())}'
+
+        return code
+
+    def _property_line(self, callout: Callable[[Property], str], property: Property):
+        return f'{' ' * self._indent}{callout(property)}\n'
+
+    def _field(self, property: Property) -> str:
         type = property.type
         after_property_name = ''
 
@@ -36,15 +50,11 @@ class Generator(GeneratorBase):
         else:
             raise Exception('Unknown type')
 
-        return f'{type} {property.name}{after_property_name};'
+        return f'{type} {property.name}{after_property_name};{
+            f' {self._line_comment(property.comment)}' if property.comment else ''
+        }'
     
-    def _property_comment(self, comment: str) -> str:
-        return f' /* {comment} */'
-    
-    def _end_type(self) -> str:
-        return f'}} {self._type_name} = {{'
-    
-    def _property_after_type(self, property: Property) -> str:
+    def _value(self, property: Property) -> str:
         type = property.type
 
         if type == PropertyType.BOOL:
@@ -61,10 +71,7 @@ class Generator(GeneratorBase):
         else:
             raise Exception('Unknown type')
 
-        return f'{" " * self._indent}{value},'
-    
-    def _after_type(self) -> str:
-        return f'}};\n\n#endif{self._property_comment(self._guard_name())}'
+        return f'{value},'
     
     def _guard_name(self):
         return f'{NameConverter.convert(self._type_name, NamingConventionType.SCREAMING_SNAKE_CASE)}_H'
