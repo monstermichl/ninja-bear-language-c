@@ -20,12 +20,10 @@ setup(
             'ninja-bear-language-c': ['config=ninja_bear_language.config:Config']
         },
         install_requires=[
-            'pyyaml >= 6.0.1',
-            'schema >= 0.7.5',
+            'ninja-bear>=1.0.0',
         ],
         extras_require={
             'dev': [
-                'ninja-bear>=1.0.0',
                 'wheel>=0.41.1',
                 'twine>=4.0.2',
                 'ruff>=0.0.47',
@@ -33,13 +31,12 @@ setup(
             ],
         },
         python_requires='>=3.10',
-        classifiers= [
+        classifiers=[
             'Programming Language :: Python :: 3',
-            'License :: OSI Approved :: MIT License',
             'Operating System :: OS Independent',
         ],
-        url = 'https://github.com/monstermichl/ninja-bear-language-c.git',
-        keywords = [
+        url='https://github.com/monstermichl/ninja-bear-language-c.git',
+        keywords=[
             'ninja-bear',
             'plugin',
             'language',
