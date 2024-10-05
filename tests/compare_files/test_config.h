@@ -15,7 +15,7 @@ const struct {
     322.0f,
     45724.0f,
     233.9,
-    "Test Reg(E|e)x",
+    "Test Reg(E|e)x", /* Just another RegEx. */
     "Sometimes I just want to scream Hello World!",
 };
 

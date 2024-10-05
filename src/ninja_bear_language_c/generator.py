@@ -1,5 +1,5 @@
-from typing import Callable, List
-from ninja_bear import GeneratorBase, Property, PropertyType, NameConverter, NamingConventionType
+from typing import Callable
+from ninja_bear import GeneratorBase, Property, PropertyType, NameConverter, NamingConventionType, DumpInfo
 
 
 class Generator(GeneratorBase):
@@ -13,24 +13,28 @@ class Generator(GeneratorBase):
     def _line_comment(self, string: str) -> str:
         return f'/* {string} */'
     
-    def _dump(self, type_name: str, properties: List[Property]) -> str:
+    def _dump(self, info: DumpInfo) -> str:
+        properties = info.properties
+        indent = info.indent
+
         code = f'#ifndef {self._guard_name()}\n#define {self._guard_name()}\n\n'
         code += 'const struct {\n'
 
         # Specify fields.
         for property in properties:
-            code += self._property_line(self._field, property)
-        code += f'}} {type_name} = {{\n'
+            code += self._property_line(self._field, property, indent)
+        code += f'}} {info.type_name} = {{\n'
 
         # Assign values.
         for property in properties:
-            code += self._property_line(self._value, property)
+            code += self._property_line(self._value, property, indent)
         code += f'}};\n\n#endif {self._line_comment(self._guard_name())}'
 
         return code
 
-    def _property_line(self, callout: Callable[[Property], str], property: Property):
-        return f'{' ' * self._indent}{callout(property)}\n'
+    def _property_line(self, callout: Callable[[Property], str], property: Property, indent: int):
+        comment = f' {self._line_comment(property.comment)}' if property.comment else ''
+        return f'{' ' * indent}{callout(property)}{comment}\n'
 
     def _field(self, property: Property) -> str:
         type = property.type
@@ -50,9 +54,7 @@ class Generator(GeneratorBase):
         else:
             raise Exception('Unknown type')
 
-        return f'{type} {property.name}{after_property_name};{
-            f' {self._line_comment(property.comment)}' if property.comment else ''
-        }'
+        return f'{type} {property.name}{after_property_name};'
     
     def _value(self, property: Property) -> str:
         type = property.type
