@@ -17,7 +17,7 @@ setup(
         packages=find_packages(where='src'),
         py_modules=['ninja_bear_language_c'],
         entry_points = {
-            'ninja-bear-language-c': ['config=ninja_bear_language_c.config:Config']
+            'ninja_bear_language_c': ['config=ninja_bear_language_c.config:Config']
         },
         extras_require={
             'dev': [
