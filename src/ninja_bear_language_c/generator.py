@@ -34,7 +34,7 @@ class Generator(GeneratorBase):
 
     def _property_line(self, callout: Callable[[Property], str], property: Property, indent: int):
         comment = f' {self._line_comment(property.comment)}' if property.comment else ''
-        return f'{' ' * indent}{callout(property)}{comment}\n'
+        return f'{" " * indent}{callout(property)}{comment}\n'
 
     def _field(self, property: Property) -> str:
         type = property.type
