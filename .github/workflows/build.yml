@@ -1,12 +1,9 @@
-# This workflow will upload a Python Package using Twine when a release is created
-# For more information see: https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
+# This workflow tests and lints the Python code of the plugin. If a release is created, it will upload the package to https://pypi.org.
 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
+# For more information see:
+# https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
 
-name: language pipeline
+name: ninja-bear-language-c pipeline
 
 on:
   push:
@@ -14,7 +11,6 @@ on:
   pull_request:
     branches: [ '*' ]
   release:
-    branches: [ 'main' ]
     types:
       - 'created'
 
@@ -32,7 +28,6 @@ jobs:
     - name: Prepare Python
       run: |
         python3 -m pip install --upgrade pip
-        python3 -m pip install ninja-bear
         python3 -m pip install -r requirements.txt
         python3 -m pip install ruff coverage[toml]
     - name: Run tests
@@ -71,5 +66,4 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         user: __token__
-        password: ${{ secrets.PYPI_TOKEN }}
-    
+        password: ${{ secrets.PYPI_TOKEN }}  # TODO: Define your PyPi token here if you want to upload your package on release.
