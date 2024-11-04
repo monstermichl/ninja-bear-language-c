@@ -1,6 +1,7 @@
 # ninja-bear-language-c
 This [ninja-bear](https://pypi.org/project/ninja-bear) plugin adds support for the C programming language.
 
+## Example configuration
 ```yaml
 languages:
   # -------------------------------------------------------------------------
@@ -60,4 +61,30 @@ properties:
     name: mySubstitutedString
     value: Sometimes I just want to scream ${myString}!  # To use the value of another property, simply use its name with ${}. E.g., ${myString}.
 
+```
+
+## Example output
+```c
+#ifndef TEST_CONFIG_H
+#define TEST_CONFIG_H
+
+const struct {
+    unsigned char MyBoolean;
+    int MyInteger;
+    float MyFloat;
+    float MyCombinedFloat;
+    double MyDouble;
+    char MyRegex[15]; /* Just another RegEx. */
+    char MySubstitutedString[45];
+} TestConfig = {
+    1,
+    142,
+    322.0f,
+    45724.0f,
+    233.9,
+    "Test Reg(E|e)x", /* Just another RegEx. */
+    "Sometimes I just want to scream Hello World!",
+};
+
+#endif /* TEST_CONFIG_H */
 ```
